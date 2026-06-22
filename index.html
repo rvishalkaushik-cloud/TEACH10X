@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TeachTenX — AI Workshop for Teachers</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07091A;
+  --surface:#0F1528;
+  --card:#161D35;
+  --border:#252E4A;
+  --purple:#7B6FF0;
+  --purple-light:#A89AF7;
+  --gold:#FFD23F;
+  --gold-dim:#A88A1A;
+  --red:#FF4757;
+  --green:#2ED573;
+  --text:#F0F4FF;
+  --muted:#8896B3;
+  --faint:#3A4460;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,9,26,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 5vw}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none;letter-spacing:-.5px}
+.logo span{color:var(--purple)}
+.nav-cta{background:var(--purple);color:#fff;padding:10px 22px;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none;transition:opacity .2s}
+.nav-cta:hover{opacity:.85}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 5vw 70px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(123,111,240,.16) 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(123,111,240,.14);border:1px solid rgba(123,111,240,.35);color:var(--purple-light);font-size:.82rem;font-weight:600;padding:6px 18px;border-radius:100px;margin-bottom:28px;letter-spacing:.3px}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--purple);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'Sora',sans-serif;font-size:clamp(2.2rem,5.5vw,3.9rem);font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:24px;max-width:920px}
+h1 .accent{color:var(--purple)}
+h1 .gold{color:var(--gold)}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--muted);max-width:620px;margin:0 auto 20px;line-height:1.75}
+.hero-sub strong{color:var(--text)}
+
+/* COUNTDOWN IN HERO */
+.hero-timer-wrap{margin:28px auto 36px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 36px;display:inline-flex;flex-direction:column;align-items:center;gap:10px;max-width:500px;width:100%}
+.timer-label{font-size:.75rem;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase}
+.timer-blocks{display:flex;gap:12px;align-items:center;justify-content:center}
+.t-block{display:flex;flex-direction:column;align-items:center;gap:4px}
+.t-num{font-family:'Sora',sans-serif;font-size:2.4rem;font-weight:800;color:var(--text);line-height:1;min-width:64px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px}
+.t-unit{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.t-sep{font-family:'Sora',sans-serif;font-size:2rem;font-weight:800;color:var(--purple);margin-bottom:20px}
+.timer-note{font-size:.8rem;color:var(--muted)}
+.timer-note strong{color:var(--gold)}
+
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:0}
+.btn-primary{background:var(--purple);color:#fff;padding:16px 36px;border-radius:10px;font-weight:700;font-size:1.05rem;text-decoration:none;transition:transform .2s,box-shadow .2s;font-family:'Sora',sans-serif;display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(123,111,240,.4)}
+.btn-secondary{background:transparent;color:var(--text);padding:16px 28px;border-radius:10px;font-weight:600;font-size:1.05rem;text-decoration:none;border:1px solid var(--border);transition:border-color .2s}
+.btn-secondary:hover{border-color:var(--purple)}
+
+/* STATS */
+.stats{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 5vw}
+.stats-inner{max-width:1100px;margin:0 auto;display:flex;gap:0;justify-content:space-around;flex-wrap:wrap}
+.stat{text-align:center;padding:12px 20px}
+.stat-num{font-family:'Sora',sans-serif;font-size:2rem;font-weight:800;color:var(--purple)}
+.stat-label{font-size:.8rem;color:var(--muted);margin-top:2px}
+
+/* SECTIONS */
+section{padding:80px 5vw}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-eyebrow{font-size:.75rem;font-weight:700;letter-spacing:1.8px;color:var(--purple);text-transform:uppercase;margin-bottom:14px}
+h2{font-family:'Sora',sans-serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;line-height:1.2;letter-spacing:-.8px;margin-bottom:16px}
+.section-sub{color:var(--muted);font-size:1rem;max-width:600px;margin-bottom:44px}
+
+/* PAIN CARDS */
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.pain-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;position:relative;overflow:hidden}
+.pain-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.pain-card.p1::before{background:var(--red)}
+.pain-card.p2::before{background:#FF8C00}
+.pain-card.p3::before{background:#A855F7}
+.pain-icon{font-size:2rem;margin-bottom:16px}
+.pain-card h3{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.pain-time{display:inline-flex;align-items:center;gap:6px;background:rgba(255,71,87,.12);color:var(--red);font-size:.78rem;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:12px}
+.pain-card p{color:var(--muted);font-size:.88rem;line-height:1.65}
+
+/* LEARN SECTION — THE 4 BIG CARDS */
+.learn-section{background:var(--surface)}
+.learn-big-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:24px}
+@media(max-width:720px){.learn-big-grid{grid-template-columns:1fr}}
+.learn-big-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;gap:20px;align-items:flex-start;transition:border-color .25s}
+.learn-big-card:hover{border-color:var(--purple)}
+.learn-number{font-family:'Sora',sans-serif;font-size:3rem;font-weight:800;color:var(--faint);line-height:1;flex-shrink:0;width:56px}
+.learn-content h3{font-family:'Sora',sans-serif;font-size:1.12rem;font-weight:700;margin-bottom:10px;color:var(--text)}
+.learn-content p{color:var(--muted);font-size:.9rem;line-height:1.7}
+.learn-content p strong{color:var(--purple-light)}
+.learn-tag{display:inline-block;margin-top:14px;background:rgba(123,111,240,.14);color:var(--purple-light);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:100px;letter-spacing:.4px}
+
+/* AI TOOLS */
+.tools-section{background:var(--bg)}
+.ai-tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.tool-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;transition:border-color .2s,transform .2s}
+.tool-chip:hover{border-color:var(--purple);transform:translateY(-2px)}
+.tool-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.tool-name{font-size:.82rem;font-weight:600;color:var(--muted)}
+
+/* SCHEDULE */
+.schedule-bg{background:var(--surface)}
+.days-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.days-grid{grid-template-columns:1fr}}
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.day-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.day-badge{background:var(--purple);color:#fff;font-family:'Sora',sans-serif;font-size:.75rem;font-weight:700;padding:4px 14px;border-radius:100px}
+.day-title{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
+.day-sessions{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.session{display:flex;gap:12px;align-items:flex-start}
+.session-time{font-size:.72rem;color:var(--purple);font-weight:700;white-space:nowrap;padding-top:3px;min-width:68px}
+.session-name{font-size:.87rem;color:var(--text);line-height:1.5}
+
+/* PRICING */
+.pricing-bg{background:var(--bg)}
+.pricing-wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:stretch;justify-content:center}
+.price-card{flex:1;min-width:260px;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative}
+.price-card.featured{border-color:var(--purple)}
+.featured-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;font-size:.75rem;font-weight:700;padding:5px 20px;border-radius:100px;white-space:nowrap;font-family:'Sora',sans-serif}
+.price-label{font-size:.78rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.price-currency{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text)}
+.price-big{font-family:'Sora',sans-serif;font-size:4.2rem;font-weight:800;line-height:1;color:var(--text)}
+.price-big.purple{color:var(--purple)}
+.price-struck{font-size:1rem;color:var(--muted);text-decoration:line-through;font-weight:500}
+.savings-pill{display:inline-block;background:rgba(46,213,115,.12);color:var(--green);font-size:.78rem;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:16px}
+.seats-wrap{margin-bottom:20px}
+.seats-top{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:6px}
+.seats-top strong{color:var(--red)}
+.seats-bar{height:6px;background:var(--border);border-radius:100px;overflow:hidden}
+.seats-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--red));border-radius:100px;width:72%}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+.price-features li{font-size:.88rem;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.price-features li .ck{color:var(--green);font-weight:700;flex-shrink:0}
+.price-features li.highlight{color:var(--text)}
+.price-btn{display:block;text-align:center;padding:15px;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;transition:opacity .2s,transform .2s;font-family:'Sora',sans-serif}
+.price-btn.primary{background:var(--purple);color:#fff}
+.price-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.price-btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border);cursor:default;opacity:.6}
+.price-note{text-align:center;font-size:.8rem;color:var(--muted);margin-top:10px}
+
+/* CERTIFICATE */
+.cert-section{background:var(--surface)}
+.cert-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px;display:flex;gap:36px;align-items:center;flex-wrap:wrap}
+.cert-visual{flex-shrink:0;width:160px;height:116px;border:2px solid var(--gold);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(255,210,63,.04)}
+.cert-seal{font-size:2.6rem}
+.cert-vis-text{font-family:'Sora',sans-serif;font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;text-align:center;line-height:1.4}
+.cert-info h3{font-family:'Sora',sans-serif;font-size:1.35rem;font-weight:800;margin-bottom:10px}
+.cert-info p{color:var(--muted);font-size:.9rem;margin-bottom:18px;line-height:1.7}
+.cert-tags{display:flex;gap:8px;flex-wrap:wrap}
+.cert-tag{background:rgba(255,210,63,.1);color:var(--gold);border:1px solid rgba(255,210,63,.25);font-size:.78rem;font-weight:600;padding:5px 14px;border-radius:100px}
+@media(max-width:640px){.cert-card{flex-direction:column;text-align:center}.cert-tags{justify-content:center}}
+
+/* TESTIMONIALS */
+.quote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.quote-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px}
+.stars{color:var(--gold);font-size:1rem;margin-bottom:12px;letter-spacing:2px}
+.quote-text{font-size:.9rem;color:var(--text);line-height:1.75;margin-bottom:18px;font-style:italic}
+.quote-author{display:flex;align-items:center;gap:12px}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff;font-family:'Sora',sans-serif;flex-shrink:0}
+.author-name{font-size:.87rem;font-weight:600}
+.author-role{font-size:.76rem;color:var(--muted)}
+
+/* FINAL CTA */
+.final-cta{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 5vw;text-align:center}
+.final-cta h2{margin-bottom:12px}
+.final-cta p{color:var(--muted);margin-bottom:12px;max-width:540px;margin-left:auto;margin-right:auto;font-size:.95rem}
+.final-price-line{font-family:'Sora',sans-serif;font-size:1.1rem;margin-bottom:32px;color:var(--text)}
+.final-price-line .strike{text-decoration:line-through;color:var(--muted);font-size:.9rem}
+.final-price-line .big-price{color:var(--gold);font-size:1.5rem;font-weight:800}
+
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:28px 5vw;text-align:center}
+footer p{color:var(--faint);font-size:.8rem;margin-bottom:4px}
+footer a{color:var(--purple);text-decoration:none}
+
+hr.divider{border:none;border-top:1px solid var(--border)}
+
+@media(max-width:480px){
+  h1{font-size:1.9rem;letter-spacing:-1px}
+  .hero-timer-wrap{padding:16px 20px}
+  .t-num{font-size:1.8rem;min-width:48px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">Teach<span>10X</span></a>
+    <a class="nav-cta" href="#pricing">Register ₹99 →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    1-Day Workshop for Teachers Across India
+  </div>
+
+  <h1>Every Great Teacher Deserves<br><span class="accent">Secrets That Save Hours</span><br>and Make You <span class="gold">Irreplaceable</span></h1>
+
+  <p class="hero-sub">Lesson plans. Question papers. PPTs. Formatting. <strong>What takes you 3 hours today, you will do in 3 minutes after this workshop.</strong> I'll teach you everything I use — tools, tricks, and secrets I've never shared before.</p>
+
+  <!-- COUNTDOWN TIMER -->
+  <div class="hero-timer-wrap">
+    <div class="timer-label">⚡ Early Bird Offer Expires In</div>
+    <div class="timer-blocks">
+      <div class="t-block"><div class="t-num" id="t-h">23</div><div class="t-unit">Hours</div></div>
+      <div class="t-sep">:</div>
+      <div class="t-block"><div class="t-num" id="t-m">59</div><div class="t-unit">Mins</div></div>
+      <div class="t-sep">:</div>
+      <div class="t-block"><div class="t-num" id="t-s">59</div><div class="t-unit">Secs</div></div>
+    </div>
+    <div class="timer-note">After this, price goes from <strong>₹99 → ₹1,000</strong>. No exceptions.</div>
+  </div>
+
+  <div class="hero-btns">
+    <a class="btn-primary" href="#pricing">📋 Reserve My Seat — Only ₹99</a>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">3+</div><div class="stat-label">Hours saved every day</div></div>
+    <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Free AI tools you'll master</div></div>
+    <div class="stat"><div class="stat-num">1 Day</div><div class="stat-label">Intensive weekend workshop</div></div>
+    <div class="stat"><div class="stat-num">₹99</div><div class="stat-label">Early bird — save ₹901</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Hands-on & practical</div></div>
+  </div>
+</div>
+
+<!-- PAIN -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow">The Problem Every Teacher Knows</div>
+    <h2>You're Spending Half Your Life<br>on Work That Shouldn't Take This Long</h2>
+    <p class="section-sub">If you're spending evenings making lesson plans, question papers, and slides — it's not your fault. Nobody taught you the smarter way. Until now.</p>
+    <div class="pain-grid">
+      <div class="pain-card p1">
+        <div class="pain-icon">📝</div>
+        <div class="pain-time">⏱ 2–3 hours daily</div>
+        <h3>Lesson Plans from Scratch</h3>
+        <p>Sitting after school writing lesson plans with the right letterhead, school format, and objectives — manually — every single day. This is the most fixable problem in teaching.</p>
+      </div>
+      <div class="pain-card p2">
+        <div class="pain-icon">📄</div>
+        <div class="pain-time">⏱ 1–2 hours per paper</div>
+        <h3>Question Papers &amp; Formatting</h3>
+        <p>Picking questions, balancing difficulty levels, formatting Word and Excel files correctly — every mark, every section, every header done manually. AI ends this forever.</p>
+      </div>
+      <div class="pain-card p3">
+        <div class="pain-icon">📊</div>
+        <div class="pain-time">⏱ 1–2 hours per PPT</div>
+        <h3>Presentations Nobody Remembers</h3>
+        <p>Spending hours making slides that still look average. Your students lose interest, your effort goes unnoticed. The right tools will make presentations nobody in your school can match.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- WHAT YOU'LL LEARN — THE 4 PILLARS -->
+<section class="learn-section" id="learn">
+  <div class="section-inner">
+    <div class="section-eyebrow">What You Will Master</div>
+    <h2>Four Secrets I Use Every Day<br><span style="color:var(--purple)">That Ordinary Teachers Don't Know</span></h2>
+    <p class="section-sub">These are the exact tools and techniques I personally use in my teaching. After 2 days, they will be yours too.</p>
+
+    <div class="learn-big-grid">
+
+      <!-- 1 -->
+      <div class="learn-big-card">
+        <div class="learn-number">01</div>
+        <div class="learn-content">
+          <h3>How to Use Free AI Tools the Right Way — Not the Way Everyone Else Does</h3>
+          <p>Most teachers open an AI tool, type something vague, and get a vague answer. I'll show you the <strong>exact method of giving instructions to AI</strong> so it produces exactly what you need — perfectly formatted, subject-specific, CBSE-aligned output, every single time. No guesswork. No trial and error. You'll know the formula.</p>
+          <span class="learn-tag">✦ Prompt Engineering for Teachers</span>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="learn-big-card">
+        <div class="learn-number">02</div>
+        <div class="learn-content">
+          <h3>Presentations So Flawless, No Other Teacher in Your School Can Match Them</h3>
+          <p>I'm going to show you how I make <strong>visually stunning, student-captivating presentations</strong> using free AI tools that 99% of teachers have never heard of. We're not talking about basic slides — we're talking about animated, designed, beautiful decks that make you look like a professional designer. I guarantee nobody in your school will believe you made it in minutes.</p>
+          <span class="learn-tag">✦ Advanced AI Presentation Design</span>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="learn-big-card">
+        <div class="learn-number">03</div>
+        <div class="learn-content">
+          <h3>Format Word Files, Excel Sheets &amp; Question Papers in Seconds — Not Hours</h3>
+          <p>That question paper you spend 2 hours formatting — the margins, the section headers, the marks breakdown, the font — AI can do all of it in under 60 seconds. I'll show you how to use <strong>free AI tools to format any document</strong>, question paper, or Excel file perfectly, according to any instruction, in a fraction of the time it takes you today.</p>
+          <span class="learn-tag">✦ AI Document &amp; Spreadsheet Mastery</span>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="learn-big-card">
+        <div class="learn-number">04</div>
+        <div class="learn-content">
+          <h3>Lesson Plans with Your School's Letterhead, Format &amp; Instructions — in Minutes</h3>
+          <p>Not a generic lesson plan. <strong>Your school's lesson plan</strong> — with the exact letterhead, the exact format your principal requires, your subject's specific objectives, and every section filled correctly. I'll teach you how to feed AI your school's instructions once, and generate a complete, 100% compliant lesson plan in under 3 minutes. The same plan that used to take your entire evening.</p>
+          <span class="learn-tag">✦ School-Specific Lesson Plan Automation</span>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="learn-big-card">
+        <div class="learn-number">05</div>
+        <div class="learn-content">
+          <h3>Ready-to-Use Prompts — Tested, Proven, Handed Straight to You</h3>
+          <p>You won't leave this workshop empty-handed. I will give you my <strong>personal collection of the best prompts</strong> — the exact ones I use every day — that you can start using the moment the workshop ends. No figuring out, no trial and error. Just open, paste, and watch AI deliver exactly what you need. These prompts alone will save you hours every single week.</p>
+          <span class="learn-tag">✦ Exclusive Prompt Library Included</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:28px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 32px">
+      <p style="font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:6px">Be ready to become the most efficient teacher in your school.</p>
+      <p style="color:var(--muted);font-size:.9rem">Every tool, every prompt, every secret — taught live, practiced by you. And at the end, a digital certificate that proves you showed up and levelled up.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="pricing">
+  <div class="section-inner">
+    <div class="section-eyebrow">Workshop Investment</div>
+    <h2>One Honest Price.<br>An Offer That Expires Soon.</h2>
+    <p class="section-sub" style="margin-bottom:40px">The workshop costs <strong style="color:var(--text)">₹1,000</strong>. But for the first 500 teachers who register, it is just ₹99. After 500 seats are gone — or the timer runs out — the price goes back to ₹1,000. No exceptions.</p>
+
+    <div class="pricing-wrap">
+      <div class="price-card">
+        <div class="price-label">Regular Price</div>
+        <div class="price-row">
+          <span class="price-currency">₹</span>
+          <span class="price-big">1,000</span>
+        </div>
+        <ul class="price-features" style="margin-top:16px">
+          <li><span class="ck">✓</span> 1-Day Weekend Workshop</li>
+          <li><span class="ck">✓</span> All AI tool walkthroughs</li>
+          <li><span class="ck">✓</span> Completion certificate</li>
+          <li><span class="ck">✓</span> Resource materials</li>
+        </ul>
+        <div class="price-btn ghost">Available After 500 Seats</div>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-badge">🔥 First 500 Teachers Only</div>
+        <div class="price-label" style="margin-top:18px">You Pay Today</div>
+        <div class="price-row">
+          <span class="price-currency" style="color:var(--purple)">₹</span>
+          <span class="price-big purple">99</span>
+          <span class="price-struck">₹1,000</span>
+        </div>
+        <div class="savings-pill">You Save ₹901 (90% Off)</div>
+        <div class="seats-wrap">
+          <div class="seats-top"><span>Seats remaining</span><strong>Only 140 left</strong></div>
+          <div class="seats-bar"><div class="seats-fill"></div></div>
+        </div>
+        <ul class="price-features">
+          <li class="highlight"><span class="ck">✓</span> 1-Day Live Weekend Workshop</li>
+          <li class="highlight"><span class="ck">✓</span> 10+ Free AI Tools — Hands-On</li>
+          <li class="highlight"><span class="ck">✓</span> Exclusive prompt library — ready to use instantly</li>
+          <li class="highlight"><span class="ck">✓</span> Lesson plan generation secrets</li>
+          <li class="highlight"><span class="ck">✓</span> Presentation design nobody else knows</li>
+          <li class="highlight"><span class="ck">✓</span> Word, Excel & question paper formatting</li>
+          <li class="highlight"><span class="ck">✓</span> Digital Completion Certificate</li>
+          <li><span class="ck">✓</span> WhatsApp support group access</li>
+          <li><span class="ck">✓</span> Lifetime access to all resources</li>
+        </ul>
+        <a href="#" class="price-btn primary">Grab My Seat for ₹99 →</a>
+        <div class="price-note" style="margin-top:12px;color:var(--red);font-size:.78rem;font-weight:600">⏱ Offer expires when timer hits zero or 500 seats fill — whichever comes first</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERT -->
+<section class="cert-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">Your Recognition</div>
+    <h2>Leave with a Certificate<br>That Proves You're Ahead</h2>
+    <div class="cert-card">
+      <div class="cert-visual">
+        <span class="cert-seal">🏅</span>
+        <span class="cert-vis-text">TeachTenX<br>Certificate of<br>Completion</span>
+      </div>
+      <div class="cert-info">
+        <h3>Official TeachTenX Certificate</h3>
+        <p>Attend the workshop and you'll receive an official digital certificate of completion. Share it with your school management, add it to your portfolio, or simply keep it as proof that you're a teacher who chose to grow. It's your reward for showing up and levelling up.</p>
+        <div class="cert-tags">
+          <span class="cert-tag">✦ Digital Certificate</span>
+          <span class="cert-tag">✦ Issued Within 2 Days</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow">What Teachers Say</div>
+    <h2>From Teachers Who Made<br>the Switch to AI</h2>
+    <div class="quote-grid" style="margin-top:0">
+      <div class="quote-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"I used to spend Sunday evenings writing lesson plans. Now I do the whole week in 15 minutes. I actually have a weekend now — and my principal loves the quality."</p>
+        <div class="quote-author">
+          <div class="avatar" style="background:var(--purple)">SR</div>
+          <div><div class="author-name">Sunita Rawat</div><div class="author-role">History Teacher, Class 9–12</div></div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"The question paper I set in 45 minutes used to take me 3 hours. The AI formatting alone was worth the entire workshop fee. I recommend this to every Commerce teacher."</p>
+        <div class="quote-author">
+          <div class="avatar" style="background:var(--gold);color:#000">RK</div>
+          <div><div class="author-name">Ramesh Kumar</div><div class="author-role">Commerce Teacher, CBSE</div></div>
+        </div>
+      </div>
+      <div class="quote-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote-text">"My colleagues kept asking how I made that presentation. Nobody believed I did it in 8 minutes. This workshop gives you an edge that ordinary teachers simply don't have."</p>
+        <div class="quote-author">
+          <div class="avatar" style="background:var(--green);color:#000">PM</div>
+          <div><div class="author-name">Priya Malhotra</div><div class="author-role">Science Teacher, Class 11</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <h2>Don't Let This Offer Expire<br>While You're Still Thinking</h2>
+  <p>The workshop costs ₹1,000. For the first 500 teachers, it's ₹99. Once the timer hits zero or 500 seats are gone, the price goes back up permanently.</p>
+  <div class="final-price-line">
+    <span class="strike">₹1,000</span> → <span class="big-price">₹99</span> for first 500 teachers
+  </div>
+  <a class="btn-primary" style="font-size:1.1rem;padding:18px 44px" href="#pricing">Grab Your Seat for ₹99 →</a>
+  <p style="color:var(--muted);font-size:.8rem;margin-top:18px">1-Day workshop • Certificate included • All tools free • No hidden charges</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom:8px"><strong style="color:var(--text)">TeachTenX Workshop</strong> — AI Skills for Educators</p>
+  <p>Conducted by <a href="#">Adv. Vishal Kaushik</a> &nbsp;·&nbsp; For queries, reach us on WhatsApp</p>
+  <p style="margin-top:12px">© 2025 TeachTenX. All rights reserved.</p>
+</footer>
+
+<script>
+// Set deadline to 24 hours from first visit (stored in sessionStorage for demo)
+var key = 'ttx_deadline';
+var stored = sessionStorage.getItem(key);
+var deadline;
+if(stored){
+  deadline = parseInt(stored,10);
+} else {
+  deadline = Date.now() + 24*60*60*1000;
+  sessionStorage.setItem(key, deadline);
+}
+
+function pad(n){return n<10?'0'+n:n}
+
+function tick(){
+  var diff = deadline - Date.now();
+  if(diff <= 0){
+    document.getElementById('t-h').textContent='00';
+    document.getElementById('t-m').textContent='00';
+    document.getElementById('t-s').textContent='00';
+    return;
+  }
+  var h = Math.floor(diff/3600000);
+  var m = Math.floor((diff%3600000)/60000);
+  var s = Math.floor((diff%60000)/1000);
+  document.getElementById('t-h').textContent=pad(h);
+  document.getElementById('t-m').textContent=pad(m);
+  document.getElementById('t-s').textContent=pad(s);
+}
+tick();
+setInterval(tick,1000);
+</script>
+</body>
+</html>
